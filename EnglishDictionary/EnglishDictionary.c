@@ -1,4 +1,4 @@
-#define _CRT_SECURE_NO_WARNINGS
+ï»¿#define _CRT_SECURE_NO_WARNINGS
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -7,26 +7,26 @@
 #define MAX_WORD_SIZE 100
 #define MAX_MEANING_SIZE 200
 
-//µ¥ÀÌÅÍ Çü½Ä
+//ë°ì´í„° í˜•ì‹
 typedef struct {
 	char word[MAX_WORD_SIZE]; //key field
 	char meaning[MAX_MEANING_SIZE];
 }element;
 
-//³ëµåÀÇ ±¸Á¶
+//ë…¸ë“œì˜ êµ¬ì¡°
 typedef struct TreeNode {
 	element key;
 	struct TreeNode* left, * right;
 }TreeNode;
 
 /*
-¸¸¾à e1 < e2 ¶ó¸é, -1 ¹İÈ¯
-¸¸¾à e1 == e2 ¶ó¸é, 0 ¹İÈ¯
-¸¸¾à e1 > e2 ¶ó¸é, 1 ¹İÈ¯
+ë§Œì•½ e1 < e2 ë¼ë©´, -1 ë°˜í™˜
+ë§Œì•½ e1 == e2 ë¼ë©´, 0 ë°˜í™˜
+ë§Œì•½ e1 > e2 ë¼ë©´, 1 ë°˜í™˜
 */
 int compare(element e1, element e2) { return strcmp(e1.word, e2.word); }
 
-//ÀÌÁø Å½»ö Æ®¸® Ãâ·ÂÇÔ¼ö
+//ì´ì§„ íƒìƒ‰ íŠ¸ë¦¬ ì¶œë ¥í•¨ìˆ˜
 void display(TreeNode* p) {
 	if (p != NULL) {
 		printf("(");
@@ -37,7 +37,7 @@ void display(TreeNode* p) {
 	}
 }
 
-//ÀÌÁø Å½»ö Æ®¸® Å½»ö ÇÔ¼ö
+//ì´ì§„ íƒìƒ‰ íŠ¸ë¦¬ íƒìƒ‰ í•¨ìˆ˜
 TreeNode* search(TreeNode* root, element key) {
 	TreeNode* p = root;
 	while (p != NULL) {
@@ -48,7 +48,7 @@ TreeNode* search(TreeNode* root, element key) {
 		else if (compare(key, p->key) > 0)
 			p = p->right;
 	}
-	return p; //Å½»ö ½ÇÆĞÇßÀ» °æ¿ì NULL ¹İÈ¯
+	return p; //íƒìƒ‰ ì‹¤íŒ¨í–ˆì„ ê²½ìš° NULL ë°˜í™˜
 }
 TreeNode* newNode(element item) {
 	TreeNode* tmp = (TreeNode*)malloc(sizeof(TreeNode));
@@ -57,38 +57,38 @@ TreeNode* newNode(element item) {
 	return tmp;
 }
 TreeNode* insertNode(TreeNode* node, element key) {
-	//Æ®¸®°¡ °ø¹éÀÌ¶ó¸é »õ·Î¿î ³ëµå ¹İÈ¯
+	//íŠ¸ë¦¬ê°€ ê³µë°±ì´ë¼ë©´ ìƒˆë¡œìš´ ë…¸ë“œ ë°˜í™˜
 	if (node == NULL) return newNode(key);
 
-	//±×·¸Áö ¾ÊÀ¸¸é ¼øÈ¯ÀûÀ¸·Î Æ®¸®¸¦ ³»·Á°£´Ù.
+	//ê·¸ë ‡ì§€ ì•Šìœ¼ë©´ ìˆœí™˜ì ìœ¼ë¡œ íŠ¸ë¦¬ë¥¼ ë‚´ë ¤ê°„ë‹¤.
 	if (compare(key, node->key) < 0)
 		node->left = insertNode(node->left, key);
 	else if (compare(key, node->key) > 0)
 		node->right = insertNode(node->right, key);
-	//·çÆ® Æ÷ÀÎÅÍ¸¦ ¹İÈ¯
+	//ë£¨íŠ¸ í¬ì¸í„°ë¥¼ ë°˜í™˜
 	return node;
 }
 TreeNode* minValueNode(TreeNode* node) {
 	TreeNode* current = node;
-	//¸Ç ¿ŞÂÊ ´Ü¸» ³ëµå¸¦ Ã£À¸·¯ ³»·Á°¨
+	//ë§¨ ì™¼ìª½ ë‹¨ë§ ë…¸ë“œë¥¼ ì°¾ìœ¼ëŸ¬ ë‚´ë ¤ê°
 	while (current->left != NULL)
 		current = current->left;
 	return current;
 }
 
-//ÀÌÁøÅ½»öÆ®¸®¿Í Å°°¡ ÁÖ¾îÁö¸é Å°°¡ ÀúÀåµÈ ³ëµå¸¦ »èÁ¦ÇÏ°í »õ·Î¿î ·çÆ®³ëµå¸¦ ¹İÈ¯ÇÑ´Ù.
+//ì´ì§„íƒìƒ‰íŠ¸ë¦¬ì™€ í‚¤ê°€ ì£¼ì–´ì§€ë©´ í‚¤ê°€ ì €ì¥ëœ ë…¸ë“œë¥¼ ì‚­ì œí•˜ê³  ìƒˆë¡œìš´ ë£¨íŠ¸ë…¸ë“œë¥¼ ë°˜í™˜í•œë‹¤.
 TreeNode* deleteNode(TreeNode* root, element key) {
 	if (root == NULL) return root;
 
-	//¸¸¾à Å°°¡ ·çÆ®º¸´Ù ÀÛÀ¸¸é ¿ŞÂÊ ¼­ºêÆ®¸®¿¡ ÀÖ´Â °ÍÀÓ
+	//ë§Œì•½ í‚¤ê°€ ë£¨íŠ¸ë³´ë‹¤ ì‘ìœ¼ë©´ ì™¼ìª½ ì„œë¸ŒíŠ¸ë¦¬ì— ìˆëŠ” ê²ƒì„
 	if (compare(key, root->key) < 0)
 		root->left = deleteNode(root->left, key);
-	//¸¸¾à Å°°¡ ·çÆ®º¸´Ù Å©´Ù¸é ¿À¸¥ÂÊ ¼­ºêÆ®¸®¿¡ ÀÖ´Â °ÍÀÓ
+	//ë§Œì•½ í‚¤ê°€ ë£¨íŠ¸ë³´ë‹¤ í¬ë‹¤ë©´ ì˜¤ë¥¸ìª½ ì„œë¸ŒíŠ¸ë¦¬ì— ìˆëŠ” ê²ƒì„
 	else if (compare(key, root->key) > 0)
 		root->right = deleteNode(root->right, key);
-	//Å°°¡ ·çÆ®¿Í °°À¸¸é ÀÌ ³ëµå¸¦ »èÁ¦ÇÏ¸é µÊ
+	//í‚¤ê°€ ë£¨íŠ¸ì™€ ê°™ìœ¼ë©´ ì´ ë…¸ë“œë¥¼ ì‚­ì œí•˜ë©´ ë¨
 	else {
-		//Ã¹ ¹øÂ°³ª µÎ ¹øÂ° °æ¿ì: ÀÚ½Ä³ëµå°¡ ¾ø°Å³ª ÀÚ½Ä ³ëµå°¡ ÇÏ³ª¸¸ ÀÖ´Â °æ¿ì
+		//ì²« ë²ˆì§¸ë‚˜ ë‘ ë²ˆì§¸ ê²½ìš°: ìì‹ë…¸ë“œê°€ ì—†ê±°ë‚˜ ìì‹ ë…¸ë“œê°€ í•˜ë‚˜ë§Œ ìˆëŠ” ê²½ìš°
 		if (root->left == NULL) {
 			TreeNode* tmp = root->right;
 			free(root);
@@ -99,23 +99,23 @@ TreeNode* deleteNode(TreeNode* root, element key) {
 			free(root);
 			return tmp;
 		}
-		//¼¼ ¹øÂ°ÀÇ °æ¿ì: ÀÚ½Ä³ëµå°¡ µÎ °³ ÀÖ´Â °æ¿ì
+		//ì„¸ ë²ˆì§¸ì˜ ê²½ìš°: ìì‹ë…¸ë“œê°€ ë‘ ê°œ ìˆëŠ” ê²½ìš°
 		TreeNode* tmp = minValueNode(root->right);
 
-		//Áß¿Ü ¼øÈ¸½Ã ÈÄ°è³ëµå¸¦ º¹»ç
+		//ì¤‘ì™¸ ìˆœíšŒì‹œ í›„ê³„ë…¸ë“œë¥¼ ë³µì‚¬
 		root->key = tmp->key;
-		//Áß¿Ü ¼øÈ¸½Ã ÈÄ°è³ëµå¸¦ »èÁ¦
+		//ì¤‘ì™¸ ìˆœíšŒì‹œ í›„ê³„ë…¸ë“œë¥¼ ì‚­ì œ
 		root->right = deleteNode(root->right, tmp->key);
 	}
 	return root;
 }
 
 void help() {
-	printf("\n**** i: ÀÔ·Â, d: »èÁ¦, s: Å½»ö, p: Ãâ·Â, q: Á¾·á ****: ");
+	printf("\n**** i: ì…ë ¥, d: ì‚­ì œ, s: íƒìƒ‰, p: ì¶œë ¥, q: ì¢…ë£Œ ****: ");
 }
 
 
-//ÀÌÁø Å½»ö Æ®¸®¸¦ »ç¿ëÇÏ´Â ¿µ¾î »çÀü ÇÁ·Î±×·¥
+//ì´ì§„ íƒìƒ‰ íŠ¸ë¦¬ë¥¼ ì‚¬ìš©í•˜ëŠ” ì˜ì–´ ì‚¬ì „ í”„ë¡œê·¸ë¨
 int main() {
 	char command;
 	element e;
@@ -125,17 +125,17 @@ int main() {
 	do {
 		help();
 		command = getchar();
-		getchar(); //¿£ÅÍÅ° Á¦°Å
+		getchar(); //ì—”í„°í‚¤ ì œê±°
 		switch (command) {
 		case 'i':
-			printf("´Ü¾î: ");
+			printf("ë‹¨ì–´: ");
 			gets_s(e.word, MAX_WORD_SIZE);
-			printf("ÀÇ¹Ì: ");
+			printf("ì˜ë¯¸: ");
 			gets_s(e.meaning, MAX_MEANING_SIZE);
 			root = insertNode(root, e);
 			break;
 		case 'd':
-			printf("´Ü¾î: ");
+			printf("ë‹¨ì–´: ");
 			gets_s(e.word, MAX_WORD_SIZE);
 			root = deleteNode(root, e);
 			break;
@@ -144,12 +144,12 @@ int main() {
 			printf("\n");
 			break;
 		case 's':
-			printf("´Ü¾î: ");
+			printf("ë‹¨ì–´: ");
 			gets_s(e.word, MAX_WORD_SIZE);
 			tmp = search(root, e);
 			if (tmp != NULL)
-				//printf("ÀÇ¹Ì: %s\n", e.meaning);
-				printf("ÀÇ¹Ì: %s\n", tmp->key.meaning);
+				//printf("ì˜ë¯¸: %s\n", e.meaning);
+				printf("ì˜ë¯¸: %s\n", tmp->key.meaning);
 			else
 				printf("%s is not found!\n", e.word);
 			break;
