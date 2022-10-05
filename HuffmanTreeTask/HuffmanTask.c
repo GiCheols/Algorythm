@@ -1,11 +1,10 @@
 #define _CRT_SECURE_NO_WARNNINGS
 #include <stdio.h>
 #include <stdlib.h>
-#include <ctype.h>
 #define MAX_ELEMENT 200
 
 int codes_sum = 0, count = 0;
-
+int j = 0;
 
 typedef struct TreeNode {
 	int weight;	//빈도수
@@ -14,6 +13,15 @@ typedef struct TreeNode {
 	struct TreeNode* right;
 	int nodeNumber;	//추가된 노드의 정보를 담는 변수
 }TreeNode;
+
+typedef struct {
+	char ch;
+	int freq;
+	int* codes;
+	int codestop;
+}encodeArray;
+
+encodeArray* encodearray;
 
 typedef struct {
 	TreeNode* ptree;	//해당 element 타입의 정보가 허프만트리의 
@@ -93,7 +101,6 @@ void destroy_tree(TreeNode* root) {
 	else {
 		printf("%c ", root->ch);
 	}
-
 	destroy_tree(root->left);
 	destroy_tree(root->right);
 	free(root);
@@ -129,6 +136,65 @@ void print_codes(TreeNode* root, int codes[], int top) {	//전위순회
 		top *= root->weight;
 		codes_sum += top;
 	}
+}
+
+void codesArray(int codes[], int freq, char ch, int top) {
+	encodearray[j].ch = ch;
+	encodearray[j].freq = freq;
+	encodearray[j].codestop = top;
+	for (int i = 0; i < encodearray[j].codestop; i++) {
+		(encodearray[j].codes)[i] = codes[i];
+	}
+	j++;
+}
+
+void encoding(TreeNode* root, int codes[], int top) {
+	if (root->left) {
+		codes[top] = 1;
+		encoding(root->left, codes, top + 1);
+	}
+	if (root->right) {
+		codes[top] = 0;
+		encoding(root->right, codes, top + 1);
+	}
+
+	if (is_leaf(root)){ 
+		codesArray(codes, root->weight, root->ch, top);
+	}
+}
+
+TreeNode* huffmanTree;
+void makeNewHuffmanTree(int freq[], char ch_list[], int n) {
+	int i;
+	TreeNode* node, * x;
+	HeapType* heap;
+	element e, e1, e2;
+	int codes[100];
+	int top = 0;
+
+	heap = create();
+	init(heap);
+
+	for (i = 0; i < n; i++) {
+		node = make_tree(NULL, NULL);
+		e.ch = node->ch = ch_list[i];
+		e.key = node->weight = freq[i];
+		e.ptree = node;
+		insertMinHeap(heap, e);
+	}
+
+	for (i = 1; i < n; i++) {
+		e1 = deleteMinHeap(heap);
+		e2 = deleteMinHeap(heap);
+		x = make_tree(e1.ptree, e2.ptree);
+		e.key = x->weight = e1.key + e2.key;
+		e.ptree = x;
+		insertMinHeap(heap, e);
+	}
+	e = deleteMinHeap(heap);
+	huffmanTree = e.ptree;
+
+	encoding(e.ptree, codes, 0);
 }
 
 void huffman_tree(int freq[], char ch_list[], int n) {
@@ -172,10 +238,10 @@ void huffman_tree(int freq[], char ch_list[], int n) {
 	free(heap);
 }
 
-int main() {
+ int main() {
 	int T, sum = 0;
+	int testcase = 0;
 	scanf("%d", &T);
-	TreeNode* huff_tree;
 
 	char* ch_list = (char*)malloc(sizeof(char) * T);
 	int* freq = (int*)malloc(sizeof(int) * T);
@@ -187,5 +253,77 @@ int main() {
 	printf("\n--------------------------------------\n");
 	printf("4비트 코드 사용시 %d bits 사용\n", sum);
 	printf("huffman 코드 사용시 %d bits 사용\n", codes_sum);
+
+	printf("\n--------------------------------------\n");
+	scanf("%d", &testcase);
+	getchar();
+	int alphabetFreq = 26;
+	char* alphabet = (char*)malloc(sizeof(char) * alphabetFreq);
+	for (int i = 0; i < alphabetFreq; i++)
+		alphabet[i] = 'a' + i;
+	encodearray = (encodeArray*)malloc(sizeof(encodearray) * codes_sum);
+	for (int i = 0; i < testcase; i++) {
+		encodearray[i].codes = (int*)malloc(sizeof(encodeArray) * testcase);
+	}
+	char* string = (char*)malloc(sizeof(char) * testcase);
+	makeNewHuffmanTree(freq, ch_list, T);
+	for (int i = 0; i < testcase; i++)
+		scanf(" %c", &string[i]);
+
+	char tmp;
+	int temper;
+	int geti = 0;
+	int* huffmanEncode = (int*)malloc(sizeof(int) * (codes_sum * 4));
+	int size = 0;
+	int realsum = 0;
+	while (geti < testcase) {
+		for (int i = 0; i < testcase; i++) {
+			if (encodearray[i].ch == string[geti]) {
+				for (int k = 0; k < encodearray[i].codestop; k++) {
+					huffmanEncode[size++] = (encodearray[i].codes)[k];
+				}
+				realsum += encodearray[i].codestop;
+				break;
+			}
+		}
+		geti++;
+	}
+
+	printf("허프만코드 암호화결과: ");
+	for (int i = 0; i < realsum; i++)
+		printf("%d", huffmanEncode[i]);
+	printf("\n");
+
+	printf("\n---------------복호화-----------------\n");
+	scanf("%d", &size);
+	getchar();
+
+	char* decoding = (char*)malloc(sizeof(char) * (size + 1));
+
+
+	for (int i = 0; i < size; i++) {
+		scanf("%c", &decoding[i]);
+	}
+
+	printf("\n복호화 결과: ");
+	TreeNode* temp = huffmanTree;
+	for (int i = 0; i < size; i++) {
+		if (decoding[i] == '1') {
+			temp = temp->left;
+			if ((temp->left == NULL) && (temp->right == NULL)) {
+				printf("%c", temp->ch);
+				temp = huffmanTree;
+			}
+		}
+		else if(decoding[i] == '0'){
+			temp = temp->right;
+			if ((temp->left == NULL) && (temp->right == NULL)) {
+				printf("%c", temp->ch);
+				temp = huffmanTree;
+			}
+		}
+	}
+	printf("\n");
+	
 	return 0;
 }
