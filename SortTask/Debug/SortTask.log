@@ -1,0 +1,5 @@
+﻿  main.c
+C:\Users\ngc46\Desktop\gitHub\Algorythm\SortTask\main.c(193,16): warning C4013: 'partition'이(가) 정의되지 않았습니다. extern은 int형을 반환하는 것으로 간주합니다.
+C:\Users\ngc46\Desktop\gitHub\Algorythm\SortTask\main.c(561,9): warning C4013: 'gets'이(가) 정의되지 않았습니다. extern은 int형을 반환하는 것으로 간주합니다.
+C:\Users\ngc46\Desktop\gitHub\Algorythm\SortTask\main.c(834,9): warning C4477: 'scanf' : 서식 문자열 '%c'에 'char *' 형식의 인수가 필요하지만 variadic 인수 1의 형식이 'int *'입니다.
+  SortTask.vcxproj -> C:\Users\ngc46\Desktop\gitHub\Algorythm\SortTask\Debug\SortTask.exe
