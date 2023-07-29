@@ -5,6 +5,6 @@ public class dasol {
         println("HI~");
         println("남기철 바보");
         println("기철이가 쓴 프로젝트");
-        println("변다솔 바보");
+        println("남기철 바보");
     }
 }
